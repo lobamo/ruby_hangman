@@ -2,7 +2,8 @@ require "csv"
 class Computer
     attr_accessor :dictionary, :random_word
     def initialize
-        @dictionary = CSV.open("/home/nicolasad/Documents/top/ruby/hangman/dictionary.csv")
+       # @dictionary = CSV.open("dictionary.csv")
+        @dictionary = CSV.open("/home/nicolas/Bureau/dev_courses/top/ruby/hangman/dictionary.csv")
     end
     
     def random_words
@@ -17,35 +18,38 @@ class Computer
 
     end
 
-def board
-        random_words
-       puts "_ " * @random_word.length
-end
 
-def guess_word
-    puts "--- choose a letter ---"
-    board = []
-    chosen_word = random_words.split(//)
-    player_guess = []
-    player_input = player_guess 
-    chosen_word.each { |i|  player_guess << " - "}
-    puts chosen_word.join
-    puts player_guess.join
-    puts "\n"
+    def guess_word
+
+     
+        puts "--- choose a letter ---"
+        board = []
+        chosen_word = random_words.split(//)
+        player_guess = []
+        player_input = player_guess 
+        chosen_word.each { |i|  player_guess << " - "}
+        puts chosen_word.join
+        puts player_guess.join
+        puts "\n"
+        loop do
+        guess = gets.chomp
+            if chosen_word.include?(guess)
+            index = 0
+            chosen_word.each { |i| 
+                if i == guess
+                    player_guess[index] = guess
+                end
+                index = index + 1
+            }     
+            puts player_guess.join  
+            end 
+            break if player_guess == chosen_word
+            end
+    end
+end
+def game
     
-    guess = gets.chomp
-    for letter in chosen_word
-        if chosen_word.include?(guess)
-            puts "gg"
-           puts letter
-           index = 0
-        else  letter != player_input
-            puts "try again" 
-            player_guess           
-        end
-    end 
 end
-
 end
 
 c = Computer.new
