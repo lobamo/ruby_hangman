@@ -1,9 +1,11 @@
 require "csv" 
 class Computer
-    attr_accessor :dictionary, :random_word
+    attr_accessor :dictionary, :random_word, :player_guess, :wrong_count
     def initialize
        # @dictionary = CSV.open("dictionary.csv")
         @dictionary = CSV.open("/home/nicolas/Bureau/dev_courses/top/ruby/hangman/dictionary.csv")
+        @player_guess = player_guess
+        @wrong_count = 0
     end
     
     def random_words
@@ -19,38 +21,54 @@ class Computer
     end
 
 
-    def guess_word
+    def game
 
      
         puts "--- choose a letter ---"
-        board = []
-        chosen_word = random_words.split(//)
-        player_guess = []
+        won = false
+        letter_used = []
+        chosen_word = random_words.split(//).map(&:downcase)
+        @player_guess = []
         player_input = player_guess 
         chosen_word.each { |i|  player_guess << " - "}
         puts chosen_word.join
-        puts player_guess.join
+        puts @player_guess.join
         puts "\n"
         loop do
-        guess = gets.chomp
+            guess = gets.chomp
             if chosen_word.include?(guess)
-            index = 0
-            chosen_word.each { |i| 
-                if i == guess
-                    player_guess[index] = guess
-                end
-                index = index + 1
-            }     
-            puts player_guess.join  
-            end 
-            break if player_guess == chosen_word
-            end
-    end
-end
-def game
+                index = 0
+                chosen_word.each { |i| 
+                    if i == guess
+                        @player_guess[index] = guess
+                    end
+                        index = index + 1
+                    }     
+                    puts @player_guess.join 
     
-end
+            
+             if @player_guess == chosen_word
+                puts "you win"
+                break
+            end
+            else letter_used << guess
+                puts letter_used.inspect
+                wrong_letter
+                puts "you have #{6 - wrong_count} left"
+        
+            end
+            if wrong_count == 6
+                puts "you loose"
+            break
+            end
+        end
+        
+    end
+
+def wrong_letter
+        @wrong_count += 1
+    end
 end
 
 c = Computer.new
-c.guess_word
+c.game
